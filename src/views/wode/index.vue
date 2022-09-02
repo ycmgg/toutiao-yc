@@ -12,7 +12,7 @@
            <span class="name">{{userInfo.name}}</span>
         </div>
 
-        <van-button round class="btn">编辑资料</van-button>
+        <van-button round class="btn" to="/user/profile">编辑资料</van-button>
      
        </div>
 
@@ -25,17 +25,17 @@
 
          <div class="data-itme">
           <span class="count">{{userInfo.follow_count}}</span>
-          <span class="text">头条</span>
+          <span class="text">关注</span>
          </div>
 
          <div class="data-itme">
           <span class="count">{{userInfo.fans_count}}</span>
-          <span class="text">头条</span>
+          <span class="text">粉丝</span>
          </div>
 
          <div class="data-itme">
           <span class="count">{{userInfo.like_count}}</span>
-          <span class="text">头条</span>
+          <span class="text">获赞</span>
          </div>
 
        </div>
@@ -115,6 +115,9 @@ created(){
 
 <style scoped lang="less">
    .wode-container{
+    /deep/.van-tabbar--fixed{
+      bottom: 20px;
+    }
     .shang{
       height: 361px;
       width: 100%;

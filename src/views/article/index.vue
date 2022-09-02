@@ -67,6 +67,10 @@
         <!-- 文章内容 -->
         <div class="article-content .markdown-body" v-html="article.content" ref="article-content"></div>
         <van-divider>正文结束</van-divider>
+        <!-- 文章评论 -->
+        <CommentList :suoon="article.art_id" @pingnen="pingnensl = $event.total_count" :list="icnnm"  @reply-click="polnhgkl"/>
+        <!-- /文章评论 -->
+
          <!-- 底部区域 -->
     <div class="article-bottom">
       <van-button
@@ -74,11 +78,12 @@
         type="default"
         round
         size="small"
+        @click="isPoshow = true"
       >写评论</van-button>
       <van-icon
         name="comment-o"
-        info="123"
-       color="#ffa500"
+        :info="pingnensl"
+        color="#ffa500"
       />
       <CollectArticle v-model="article.is_collected" :articleId="article.art_id"/>
       <!-- <van-icon
@@ -88,6 +93,9 @@
       <LikeArticle v-model="article.attitude" :articleId="article.art_id" />
 
       <van-icon name="share" color="#777777"></van-icon>
+       <!-- 弹出层 -->
+      <van-popup v-model="isPoshow" position="bottom"> <CommentPost :target="article.art_id" @post-sueen="ifunncomm"/> </van-popup>
+      <!-- 弹出层 -->
     </div>
     <!-- /底部区域 -->
       </div>
@@ -109,7 +117,11 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
-   
+   <!-- 评论回复 -->
+   <van-popup v-model="ispolrshow" round position="bottom" :style="{ height: '90%' }" > 
+    <CommentReply :component="component" v-if="ispolrshow"/>
+   </van-popup>
+   <!-- 评论回复 -->
   </div>
 </template>
 
@@ -119,12 +131,23 @@ import { ImagePreview } from 'vant';
 import CollectArticle from '@/components/collect-article/index.vue'
 import FollowUser from '@/components/follow-user/index.vue'
 import LikeArticle from '@/components/like-article/index.vue'
+import CommentList from './commponents/comment-list.vue'
+import CommentPost from './commponents/comment-post.vue'
+import CommentReply from './commponents/comment-reply.vue'
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
     CollectArticle,
     LikeArticle,
+    CommentList,
+    CommentPost,
+    CommentReply,
+  },
+  provide: function () {
+    return {
+      articleId: this.articIe
+    }
   },
   props: {
     articIe: {
@@ -138,6 +161,11 @@ export default {
       loging:true,
       errStatus:0,
       onfollowlog : false,
+      pingnensl: 0,
+      isPoshow:false,
+      ispolrshow:false,
+      component:{},
+      icnnm:[]
     }
   },
   computed: {},
@@ -182,7 +210,15 @@ export default {
          }
       })
     },
-
+    ifunncomm (data) {
+      this.isPoshow = false
+      this.pingnensl++
+      this.icnnm.unshift(data.new_obj)
+    },
+    polnhgkl (data) {
+      this.ispolrshow = true
+      this.component = data
+    }
   }
 }
 </script>
